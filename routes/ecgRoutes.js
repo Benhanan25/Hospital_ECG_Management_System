@@ -1,0 +1,12 @@
+const express=require("express"),multer=require("multer"),path=require("path"),fs=require("fs");
+const Patient=require("../models/Patient"),Visit=require("../models/Visit"),ECG=require("../models/ECG");const router=express.Router();
+const dir=path.join(__dirname,"..","uploads");if(!fs.existsSync(dir))fs.mkdirSync(dir);
+const storage=multer.diskStorage({destination:(r,f,cb)=>cb(null,dir),filename:(r,f,cb)=>cb(null,`${Date.now()}-${f.originalname.replace(/[^a-zA-Z0-9._-]/g,"_")}`)});
+const upload=multer({storage,limits:{fileSize:10*1024*1024}});
+router.post("/",upload.single("ecgFile"),async(req,res)=>{try{const {patientId,visitId,ecgDate,heartRate,prInterval,qrsDuration,qtInterval,result,doctor,notes}=req.body;const id=(patientId||"").toUpperCase();
+if(!id)return res.status(400).json({message:"Patient ID is required."});if(!await Patient.findOne({patientId:id}))return res.status(404).json({message:"Patient not found."});
+if(visitId&&!await Visit.findOne({_id:visitId,patientId:id}))return res.status(400).json({message:"Invalid visit."});
+const e=await ECG.create({patientId:id,visitId:visitId||null,ecgDate:ecgDate||new Date(),heartRate:heartRate?Number(heartRate):null,prInterval:prInterval?Number(prInterval):null,qrsDuration:qrsDuration?Number(qrsDuration):null,qtInterval:qtInterval?Number(qtInterval):null,result,doctor,notes,fileName:req.file?.originalname||"",filePath:req.file?`/uploads/${req.file.filename}`:""});
+res.status(201).json({message:"ECG record saved successfully.",ecg:e});}catch(e){res.status(500).json({message:e.message});}});
+router.get("/:patientId",async(req,res)=>{try{res.json(await ECG.find({patientId:req.params.patientId.toUpperCase()}).sort({ecgDate:-1}).lean());}catch(e){res.status(500).json({message:e.message});}});
+module.exports=router;

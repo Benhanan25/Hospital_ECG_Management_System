@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital ECG Management System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div id="loginPage" class="login-page">
+
+    <div class="login-card">
+
+        <div class="logo">♥</div>
+
+        <h1>Hospital ECG System</h1>
+        <p>ECG Room Login</p>
+
+        <form id="loginForm">
+
+            <label for="username">Username</label>
+            <input type="text" id="username" value="admin" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" value="admin123" required>
+
+            <button type="submit">Login</button>
+
+            <p id="loginMessage" class="message"></p>
+
+        </form>
+
+        <div class="login-links">
+            <button type="button" id="showRegisterAccount" class="link-button">Register Account</button>
+            <button type="button" id="showForgotPassword" class="link-button">Forgot Password?</button>
+        </div>
+
+    
+
+        <div id="registerAccountBox" class="auth-box hidden">
+            <h3>Register Account</h3>
+            <form id="registerAccountForm">
+                <label for="accountName">Full Name</label>
+                <input type="text" id="accountName" required>
+                <label for="accountUsername">Username</label>
+                <input type="text" id="accountUsername" required>
+                <label for="accountEmail">Email</label>
+                <input type="email" id="accountEmail" required>
+                <label for="accountPassword">Password</label>
+                <input type="password" id="accountPassword" minlength="6" required>
+                <label for="accountConfirmPassword">Confirm Password</label>
+                <input type="password" id="accountConfirmPassword" minlength="6" required>
+                <button type="submit">Create Account</button>
+                <p id="registerAccountMessage" class="message"></p>
+            </form>
+            <button type="button" id="backToLoginFromRegister" class="gray">Back to Login</button>
+        </div>
+
+        <div id="forgotPasswordBox" class="auth-box hidden">
+            <h3>Reset Password</h3>
+            <form id="forgotPasswordForm">
+                <label for="forgotUsername">Username</label>
+                <input type="text" id="forgotUsername" required>
+                <label for="forgotEmail">Registered Email</label>
+                <input type="email" id="forgotEmail" required>
+                <label for="newPassword">New Password</label>
+                <input type="password" id="newPassword" minlength="6" required>
+                <label for="confirmNewPassword">Confirm New Password</label>
+                <input type="password" id="confirmNewPassword" minlength="6" required>
+                <button type="submit">Reset Password</button>
+                <p id="forgotPasswordMessage" class="message"></p>
+            </form>
+            <button type="button" id="backToLoginFromForgot" class="gray">Back to Login</button>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="app" class="hidden">
+
+    <header>
+
+        <div>
+            <h1>Hospital ECG Management System</h1>
+            <p>Patient, Visit & ECG Management</p>
+        </div>
+
+        <button id="logoutBtn" class="gray" type="button">
+            Logout
+        </button>
+
+    </header>
+
+    <nav>
+
+        <button class="tab active" data-section="dashboard" type="button">
+            Dashboard
+        </button>
+
+        <button class="tab" data-section="register" type="button">
+            Register Patient
+        </button>
+
+        <button class="tab" data-section="search" type="button">
+            Search Patient
+        </button>
+
+        <button class="tab" data-section="ecg" type="button">
+            ECG Record
+        </button>
+
+    </nav>
+
+    <main>
+
+        <section id="dashboard" class="section">
+
+            <h2>Dashboard</h2>
+
+            <div class="stats">
+
+                <div>
+                    <span>Total Patients</span>
+                    <b id="totalPatients">0</b>
+                </div>
+
+                <div>
+                    <span>OPD</span>
+                    <b id="opdCount">0</b>
+                </div>
+
+                <div>
+                    <span>Ward</span>
+                    <b id="wardCount">0</b>
+                </div>
+
+                <div>
+                    <span>Clinic</span>
+                    <b id="clinicCount">0</b>
+                </div>
+
+                <div>
+                    <span>Total ECGs</span>
+                    <b id="totalECGs">0</b>
+                </div>
+
+            </div>
+
+            <div class="card">
+
+                <h3>Recent Patients</h3>
+
+                <div class="table-wrap">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>DOB</th>
+                                <th>Gender</th>
+                                <th>Action</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="recentPatients"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <section id="register" class="section hidden">
+
+            <h2>Register New Patient</h2>
+
+            <div class="card">
+
+                <form id="patientForm">
+
+                    <div class="grid2">
+
+                        <div>
+
+                            <label for="patientId">Patient ID</label>
+
+                            <div class="row">
+
+                                <input
+                                    type="text"
+                                    id="patientId"
+                                    readonly
+                                    required
+                                >
+
+                                <button
+                                    type="button"
+                                    id="generateId"
+                                    class="gray"
+                                >
+                                    Generate
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <label for="patientName">Full Name</label>
+
+                            <input
+                                type="text"
+                                id="patientName"
+                                required
+                            >
+
+                        </div>
+
+                        <div>
+
+                            <label for="dob">Date of Birth</label>
+
+                            <input
+                                type="date"
+                                id="dob"
+                                required
+                            >
+
+                        </div>
+
+                        <div>
+
+                            <label for="age">Age</label>
+
+                            <input
+                                type="number"
+                                id="age"
+                                readonly
+                            >
+
+                        </div>
+
+                        <div>
+
+                            <label for="gender">Gender</label>
+
+                            <select id="gender" required>
+
+                                <option value="">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+
+                            </select>
+
+                        </div>
+
+                        <div>
+
+                            <label for="phone">Phone</label>
+
+                            <input
+                                type="text"
+                                id="phone"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <label for="address">Address</label>
+
+                    <textarea
+                        id="address"
+                        rows="3"
+                    ></textarea>
+
+                    <hr>
+
+                    <h3>First Visit</h3>
+
+                    <div class="grid3">
+
+                        <div>
+
+                            <label for="category">Category</label>
+
+                            <select
+                                id="category"
+                                required
+                            >
+
+                                <option value="">Select</option>
+                                <option value="OPD">OPD</option>
+                                <option value="WARD">Ward</option>
+                                <option value="CLINIC">Clinic</option>
+
+                            </select>
+
+                        </div>
+
+                        <div>
+
+                            <label for="referenceNo">
+                                Reference Number
+                            </label>
+
+                            <div class="row">
+
+                                <input
+                                    type="text"
+                                    id="referenceNo"
+                                    placeholder="Generate reference number"
+                                    readonly
+                                    required
+                                >
+
+                                <button
+                                    type="button"
+                                    id="generateReference"
+                                    class="gray"
+                                >
+                                    Generate
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <div>
+
+                            <label for="visitDate">
+                                Visit Date
+                            </label>
+
+                            <input
+                                type="date"
+                                id="visitDate"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <button type="submit">
+                        Register Patient
+                    </button>
+
+                    <p
+                        id="registerMessage"
+                        class="message"
+                    ></p>
+
+                </form>
+
+            </div>
+
+        </section>
+
+        <section id="search" class="section hidden">
+
+            <h2>Search Patient</h2>
+
+            <div class="card">
+
+                <form id="searchForm" class="grid4">
+
+                    <div>
+
+                        <label for="searchPatientId">
+                            Patient ID
+                        </label>
+
+                        <input
+                            type="text"
+                            id="searchPatientId"
+                            placeholder="P001"
+                        >
+
+                    </div>
+
+                    <div>
+
+                        <label for="searchName">
+                            Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="searchName"
+                        >
+
+                    </div>
+
+                    <div>
+
+                        <label for="searchDob">
+                            DOB
+                        </label>
+
+                        <input
+                            type="date"
+                            id="searchDob"
+                        >
+
+                    </div>
+
+                    <div>
+
+                        <label for="searchGender">
+                            Gender
+                        </label>
+
+                        <select id="searchGender">
+
+                            <option value="">Any</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+
+                        </select>
+
+                    </div>
+
+                    <div>
+
+                        <label for="searchReferenceNo">
+                            Reference Number
+                        </label>
+
+                        <input
+                            type="text"
+                            id="searchReferenceNo"
+                            placeholder="OPD001 / ADM001 / CLN001"
+                        >
+
+                    </div>
+
+                    <button type="submit">
+                        Search
+                    </button>
+
+                    <button type="button" id="refreshSearch" class="gray">
+                        Refresh
+                    </button>
+
+                </form>
+
+                <p
+                    id="searchMessage"
+                    class="message"
+                ></p>
+
+            </div>
+
+            <div id="searchResults"></div>
+
+        </section>
+
+        <section id="ecg" class="section hidden">
+
+            <h2>Add ECG Record</h2>
+
+            <div class="card">
+
+                <form id="ecgSearch" class="row">
+
+                    <input
+                        type="text"
+                        id="ecgPatientId"
+                        placeholder="Patient ID e.g. P001"
+                        required
+                    >
+
+                    <button type="submit">
+                        Load Patient
+                    </button>
+
+                </form>
+
+                <p
+                    id="ecgPatientMessage"
+                    class="message"
+                ></p>
+
+                <div id="ecgInfo"></div>
+
+            </div>
+
+            <div
+                id="ecgCard"
+                class="card hidden"
+            >
+
+                <form
+                    id="ecgForm"
+                    enctype="multipart/form-data"
+                >
+
+                    <input
+                        type="hidden"
+                        id="ecgPatientHidden"
+                    >
+
+                    <div class="grid2">
+
+                        <div>
+
+                            <label for="visitSelect">
+                                Visit
+                            </label>
+
+                            <select
+                                id="visitSelect"
+                                required
+                            ></select>
+
+                        </div>
+
+                        <div>
+
+                            <label for="ecgDate">
+                                ECG Date & Time
+                            </label>
+
+                            <input
+                                type="datetime-local"
+                                id="ecgDate"
+                                required
+                            >
+
+                        </div>
+
+                        <div>
+
+                            <label for="heartRate">
+                                Heart Rate (bpm)
+                            </label>
+
+                            <input
+                                type="number"
+                                id="heartRate"
+                            >
+
+                        </div>
+
+                        <div>
+
+                            <label for="prInterval">
+                                PR Interval (ms)
+                            </label>
+
+                            <input
+                                type="number"
+                                id="prInterval"
+                            >
+
+                        </div>
+
+                        <div>
+
+                            <label for="qrsDuration">
+                                QRS Duration (ms)
+                            </label>
+
+                            <input
+                                type="number"
+                                id="qrsDuration"
+                            >
+
+                        </div>
+
+                        <div>
+
+                            <label for="qtInterval">
+                                QT Interval (ms)
+                            </label>
+
+                            <input
+                                type="number"
+                                id="qtInterval"
+                            >
+
+                        </div>
+
+                        <div>
+
+                            <label for="doctor">
+                                Doctor
+                            </label>
+
+                            <input
+                                type="text"
+                                id="doctor"
+                            >
+
+                        </div>
+
+                        <div>
+
+                            <label for="ecgFile">
+                                ECG File
+                            </label>
+
+                            <input
+                                type="file"
+                                id="ecgFile"
+                                accept=".pdf,.png,.jpg,.jpeg,.csv"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <label for="result">
+                        Result
+                    </label>
+
+                    <input
+                        type="text"
+                        id="result"
+                        placeholder="Normal / Abnormal / Pending"
+                    >
+
+                    <label for="notes">
+                        Notes
+                    </label>
+
+                    <textarea
+                        id="notes"
+                        rows="4"
+                    ></textarea>
+
+                    <button type="submit">
+                        Save ECG Record
+                    </button>
+
+                    <p
+                        id="ecgMessage"
+                        class="message"
+                    ></p>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="/js/script.js"></script>
+
+</body>
+</html>
